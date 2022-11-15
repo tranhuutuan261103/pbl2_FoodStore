@@ -1,0 +1,4 @@
+A00001,Com suon,50 20000
+A00002,Ga chien mam,10 40000
+A00003,Bap cai xao,20 10000
+B00004,Nuoc trai cay,10 10000
