@@ -20,10 +20,21 @@ Staff::~Staff()
     this->head=NULL;
 }
 
-Staff Staff::InsertNodeAfter(string name,string sdt,Day ngaysinh,string mk,
+bool Staff::CheckMaNV(string s) const
+{
+    Node_Staff *p=this->head;
+    while (p!=NULL)
+    {
+        if (p->MaNV==s) return true;
+        p=p->next;
+    }
+    return false;
+}
+
+Staff Staff::InsertNodeAfter(string MaNV,string name,string sdt,Day ngaysinh,
 string cmnd,string DiaChi,string email,float Luong)
 {
-    Node_Staff *temp=new Node_Staff(name,sdt,ngaysinh,mk,cmnd,DiaChi,email,Luong,NULL);
+    Node_Staff *temp=new Node_Staff(MaNV,name,sdt,ngaysinh,cmnd,DiaChi,email,Luong,NULL);
     if (this->head==NULL)
         this->head=temp;
     else
@@ -49,6 +60,8 @@ Staff Staff::DocFile(string TenFile)
 
         getline(input_File,s2,'|');
 
+        getline(input_File,s3,'|');
+
         input_File >> d;
         getline(input_File,line,'/');
         input_File >> m;
@@ -57,7 +70,6 @@ Staff Staff::DocFile(string TenFile)
         getline(input_File,line,'|');
         Day D(d,m,y);
 
-        getline(input_File,s3,'|');
 
         getline(input_File,s4,'|');
 
@@ -71,19 +83,22 @@ Staff Staff::DocFile(string TenFile)
 
         if (input_File.eof())
             break;
-        InsertNodeAfter(s1,s2,D,s3,s4,s5,s6,luong);
+        InsertNodeAfter(s1,s2,s3,D,s4,s5,s6,luong);
     }
     input_File.close();
     return *this;
 }
 
-void Staff::GhiFile(string TenFile)
+void Staff::GhiFile(string TenFile) const
 {
     Node_Staff *node = this->head;
     ofstream output_File;
     output_File.open(TenFile,ios::out | ios::trunc);
     while (node!=NULL)
     {
+        output_File << node->MaNV;
+        output_File << "|";
+
         output_File << node->getName();
         output_File << "|";
 
@@ -99,9 +114,6 @@ void Staff::GhiFile(string TenFile)
         output_File << "/";
 
         output_File << D.getYear();
-        output_File << "|";
-
-        output_File << node->mk;
         output_File << "|";
 
         output_File << node->cmnd;
@@ -126,6 +138,7 @@ void Staff::printfStaff() const
         Node_Staff *node = this->head;
         while (node!=NULL)
         {
+            cout << left << setw(15) << node->MaNV;
             cout << left << setw(20) << node->getName() ;
             cout << left << setw(12) << node->getSDT();
             cout << node->getNS();
@@ -137,4 +150,37 @@ void Staff::printfStaff() const
             node=node->next;
         }
     }
+}
+
+istream &operator>>(istream &in,Staff &S)
+{
+    string maNV,name,sdt,cmnd,diachi,email;
+    Day ngaysinh;
+    float luong;
+    do{
+        cout << "Nhap ma nhan vien:";
+        in >> maNV;
+    } while (S.CheckMaNV(maNV)==true);
+    cout << "Nhap ho ten nhan vien:";
+    in >> name;
+    cout << "Nhap so dien thoai:";
+    in >> sdt;
+    cout << "Nhap ngay sinh:" << endl;
+    in >> ngaysinh;
+    cout << "Nhap can cuoc cong dan:";
+    in >> cmnd;
+    cout << "Nhap dia chi:";
+    in >> diachi;
+    cout << "Nhap email:";
+    in >> email;
+    cout << "Nhap he so luong:";
+    in >> luong;
+    S.InsertNodeAfter(maNV,name,sdt,ngaysinh,cmnd,diachi,email,luong);
+    return in;
+}
+
+ostream &operator<<(ostream &out,const Staff &S)
+{
+    S.printfStaff();
+    return out;
 }

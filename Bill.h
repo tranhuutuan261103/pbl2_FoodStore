@@ -5,7 +5,8 @@
 #include "Member.h"
 #include "Product.h"
 #include "MyProduct.h"
-#include "Voucher.h"
+#include "Day.h"
+#include "Discount.h"
 
 using namespace std;
 
@@ -13,15 +14,14 @@ class Node_Bill{
 private:
     string MaHD;
     string MaTV;
-    MyProduct P;
     Day ngaynhap;
     string MaNV;
-    string MaVC;
-    int SoSP;
+    int diem;
+    float mucChietKhau;
     Node_Bill *next;
 public:
-    Node_Bill(string MaHD,string MaTV,MyProduct P,Day D,string MaNV,string MaVC,int soSP,Node_Bill *next):
-MaHD(MaHD),MaTV(MaTV),P(P),ngaynhap(D),MaNV(MaNV),MaVC(MaVC),SoSP(soSP),next(next){};
+    Node_Bill(string MaHD,string MaTV,Day D,string MaNV,int diem,float mucChietKhau,Node_Bill *next):
+MaHD(MaHD),MaTV(MaTV),ngaynhap(D),MaNV(MaNV),diem(diem),mucChietKhau(mucChietKhau),next(next){};
     friend class Bill;
 };
 
@@ -32,11 +32,13 @@ public:
     Bill();
     Bill(const Bill &B);
     ~Bill();
-    Bill InsertNodeAfter(string MaHD,string MaTV,MyProduct P,Day D,string MaNV,string MaVC,int soSP);
+    bool CheckMaHD(string s) const;
+    Bill InsertNodeAfter(string MaHD,string MaTV,Day D,string MaNV,int diem,float mucChietKhau);
     Bill DocFile(string tenFile);
-    void GhiFile(string tenFile);
-    void printfBill(const Product &p,const Voucher &V) const;
-//    float ThanhTien(Product P);
+    void GhiFile(string tenFile) const;
+    void printfBill(const Product &p,const MyProduct &MyP) const;
+    Bill CreateBill(string MaNV,Product &P,MyProduct &MyP,Member &M,const Discount &Ds);
 };
+
 
 #endif // Bill_h

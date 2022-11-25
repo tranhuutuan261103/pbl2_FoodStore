@@ -7,12 +7,14 @@ using namespace std;
 
 class Node_MyProduct{
 private:
+    string MaHD;
     string MaSP;
     int SL;
+    float DonGia;
     Node_MyProduct *next;
 public:
-    Node_MyProduct(string MaSP,int SL,Node_MyProduct *next):
-MaSP(MaSP),SL(SL),next(next){};
+    Node_MyProduct(string MaHD,string MaSP,int SL,float DonGia,Node_MyProduct *next):
+MaHD(MaHD),MaSP(MaSP),SL(SL),DonGia(DonGia),next(next){};
     friend class MyProduct;
 };
 
@@ -24,12 +26,12 @@ public:
     MyProduct(const MyProduct &P);
     ~MyProduct();
     MyProduct operator=(const MyProduct &P);
-    MyProduct InsertNodeAfter(string s,int i);
+    MyProduct InsertNodeAfter(string MaHD,string MaSP,int SL,float DonGia);
+    MyProduct DocFile(string TenFile);
+    void GhiFile(string TenFile) const;
     void printfMyProduct() const;
-    string getMaSP(int i) const;
-    int getSL(int i) const;
-    int sizeofMyProduct() const;
-    float ThanhTien(const Product &p);
+    void printfMyProduct(string s) const;
+    float ThanhTien(string s) const;
 };
 
 #endif // MyProduct_h

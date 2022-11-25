@@ -3,7 +3,18 @@
 #include "Member.h"
 #include "Product.h"
 #include "Bill.h"
-#include "Voucher.h"
+#include "Day.h"
+#include "Discount.h"
+
+float ChietKhau(int diem,float mucCK)
+{
+    return diem*mucCK;
+}
+
+int getDiemHH(float t,float MucDiemHH)
+{
+    return t*MucDiemHH;
+}
 
 using namespace std;
 
@@ -22,9 +33,20 @@ Bill::~Bill()
     this->head=NULL;
 }
 
-Bill Bill::InsertNodeAfter(string MaHD,string MaTV,MyProduct P,Day D,string MaNV,string MaVC,int soSP)
+bool Bill::CheckMaHD(string s) const
 {
-    Node_Bill *temp=new Node_Bill(MaHD,MaTV,P,D,MaNV,MaVC,soSP,NULL);
+    Node_Bill *p=this->head;
+    while (p!=NULL)
+    {
+        if (p->MaHD==s) return false;
+        p=p->next;
+    }
+    return true;
+}
+
+Bill Bill::InsertNodeAfter(string MaHD,string MaTV,Day D,string MaNV,int diem,float mucChietKhau)
+{
+    Node_Bill *temp=new Node_Bill(MaHD,MaTV,D,MaNV,diem,mucChietKhau,NULL);
     if (this->head==NULL)
         this->head=temp;
     else
@@ -43,10 +65,10 @@ Bill Bill::DocFile(string TenFile)
     input_File.open(TenFile,ios::in);
     while (1)
     {
-        MyProduct P;
-        string s1,s2,s3,s4,line,s;
+        string s1,s2,s3,line,s;
         int d,m,y;
-        int soSP,n,i;
+        int diem;
+        float mucCK;
         getline(input_File,s1,'|');
 
         getline(input_File,s2,'|');
@@ -61,31 +83,21 @@ Bill Bill::DocFile(string TenFile)
 
         getline(input_File,s3,'|');
 
-        getline(input_File,s4,'|');
+        input_File >> diem;
 
-        input_File >> soSP;
+        input_File >> mucCK;
 
         getline(input_File,line,'\n');
 
-        n=soSP;
-
-        while (n--)
-        {
-            getline(input_File,s,'|');
-            input_File >> i;
-            getline(input_File,line,'\n');
-            P.InsertNodeAfter(s,i);
-        }
-
         if (input_File.eof())
             break;
-        InsertNodeAfter(s1,s2,P,D,s3,s4,soSP);
+        InsertNodeAfter(s1,s2,D,s3,diem,mucCK);
     }
     input_File.close();
     return *this;
 }
 
-void Bill::GhiFile(string TenFile)
+void Bill::GhiFile(string TenFile) const
 {
     Node_Bill *node = this->head;
     ofstream output_File;
@@ -112,55 +124,92 @@ void Bill::GhiFile(string TenFile)
         output_File << node->MaNV;
         output_File << "|";
 
-        output_File << node->MaVC;
-        output_File << "|";
-
-        output_File << node->SoSP << endl;
-
-        int n=node->SoSP;
-
-        for (int i=0;i<n;i++)
-
-        {
-            output_File << node->P.getMaSP(i);
-            output_File << "|";
-            output_File << node->P.getSL(i) << endl;
-        }
+        output_File << node->diem << " " << node->mucChietKhau << endl;
 
         node=node->next;
     }
     output_File.close();
 }
 
-void Bill::printfBill(const Product &p,const Voucher &V) const
+void Bill::printfBill(const Product &p,const MyProduct &MyP) const
 {
     if(this->head!=NULL)
     {
         Node_Bill *node = this->head;
         while (node!=NULL)
         {
+            // string MaHD,string MaTV,Day D,string MaNV,int diem,float mucChietKhau
             cout << left << setw(20) << node->MaHD ;
             cout << left << setw(12) << node->MaTV;
             cout << node->ngaynhap;
             cout << left << setw(15) << node->MaNV;
-            cout << left << setw(15) << node->MaVC;
-            cout << left << setw(10) << node->SoSP;
+            cout << left << setw(10) << node->diem;
+            cout << left << setw(10) << node->mucChietKhau;
             cout << endl;
-            node->P.printfMyProduct();
-            float t=node->P.ThanhTien(p);
-            cout << t << endl;
-            cout << V.MucGiam(node->MaVC,t) << endl;
+            MyP.printfMyProduct(node->MaHD);
+            float t=MyP.ThanhTien(node->MaHD);
+            cout << left << setw(15) << "Tong:" << t << endl;
+            float c=ChietKhau(node->diem,node->mucChietKhau);
+            cout << left << setw(15) << "Chiet khau:" << c << endl;
+            cout << left << setw(15) << "Thanh tien:" << t-c << endl;
+            cout << endl;
+
             node=node->next;
         }
     }
 }
-/*
-float Bill::ThanhTien(Product p)
+
+Bill Bill::CreateBill(string MaNV,Product &P,MyProduct &MyP,Member &M,const Discount &Ds)
 {
-    float s=0;
-    for (int i=0;i<this->head->P.sizeofMyProduct();i++)
-    {
-        s+=(p.getDonGia(this->head->P.getMaSP(i)))*(this->head->P.getSL(i));
+    string maHD,maTV,s;
+    int sl,diem=0;
+    float mucCK=Ds.getMucCK();
+    do{
+        cout << "Nhap ma hoa don:";
+        cin >> maHD;
+    }while (!this->CheckMaHD(maHD));
+    Day D;
+    cout << "Ngay nhap hoa don:" << endl;
+    cin >> D;
+
+    do {
+        do {
+            cout << "Nhap ma san pham(nhap 0 de dung):";
+            cin >> s;
+            if (s=="0") break;
+        }while (!P.CheckMaSP(s));
+        if (s=="0") break;
+        do {
+            cout << "Nhap so luong:";
+            cin >> sl;
+        }while (sl>P.GetSL(s) || sl<=0);
+        P.UpDateSL(s,sl);
+        MyP.InsertNodeAfter(maHD,s,sl,P.getDonGia(s));
+    } while (1);
+
+    do {
+        cout << "Nhap ma thanh vien(nhap 0 de thanh toan ngay):" ;
+        cin >> maTV;
+    }while(maTV!="0" && M.CheckMaTV(maTV)==false);
+
+    float t=MyP.ThanhTien(maHD);
+    cout << "Tong tien:" << t << endl;
+
+    if (maTV=="0")
+        diem=0;
+    else{
+        cout << "Diem cua ban la:" << M.getDiem(maTV) << endl;
+        cout << "Muc chiet khau moi diem:" << Ds.getMucCK() << endl;
+        do {
+            cout << "Nhap muc diem quy doi:" ;
+            cin >> diem;
+        } while (diem<0 || ChietKhau(diem,mucCK) >= t || diem>M.getDiem(maTV));
+        M.UpdateDiem(maTV,-diem);
+        int new_diem=getDiemHH(t,Ds.getMucDiemHH());
+        M.UpdateDiem(maTV,new_diem);
     }
-    return s;
-}*/
+
+    this->InsertNodeAfter(maHD,maTV,D,MaNV,diem,mucCK);
+    return *this;
+}
+

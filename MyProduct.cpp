@@ -28,9 +28,9 @@ MyProduct MyProduct::operator=(const MyProduct &P)
     return *this;
 }
 
-MyProduct MyProduct::InsertNodeAfter(string s,int i)
+MyProduct MyProduct::InsertNodeAfter(string MaHD,string MaSP,int SL,float DonGia)
 {
-    Node_MyProduct *temp=new Node_MyProduct(s,i,NULL);
+    Node_MyProduct *temp=new Node_MyProduct(MaHD,MaSP,SL,DonGia,NULL);
     if (this->head==NULL)
         this->head=temp;
     else
@@ -43,56 +43,99 @@ MyProduct MyProduct::InsertNodeAfter(string s,int i)
     return *this;
 }
 
+MyProduct MyProduct::DocFile(string TenFile)
+{
+    ifstream input_File;
+    input_File.open(TenFile,ios::in);
+    while (1)
+    {
+        string s1,s2,line;
+        int sl;
+        float dongia;
+        getline(input_File,s1,'|');
+
+        getline(input_File,s2,'|');
+
+        input_File >> sl;
+
+        input_File >> dongia;
+        getline(input_File,line,'\n');
+        if (input_File.eof())
+            break;
+
+        InsertNodeAfter(s1,s2,sl,dongia);
+    }
+    input_File.close();
+    return *this;
+}
+
+void MyProduct::GhiFile(string TenFile) const
+{
+    Node_MyProduct *node = this->head;
+    ofstream output_File;
+    output_File.open(TenFile,ios::out | ios::trunc);
+    while (node!=NULL)
+    {
+        output_File << node->MaHD;
+        output_File << "|";
+        output_File << node->MaSP;
+        output_File << "|";
+        output_File << node->SL << " " << node->DonGia << endl;
+        node=node->next;
+    }
+    output_File.close();
+}
+
+
 void MyProduct::printfMyProduct() const
 {
     if(this->head!=NULL)
     {
-        Node_MyProduct *node=this->head;
+        Node_MyProduct *node = this->head;
         while (node!=NULL)
         {
-            cout << left << setw(10) << node->MaSP;
-            cout << node->SL<<endl;
+            cout << left << setw(10) << node->MaHD;
+            cout << left << setw(30) << node->MaSP;
+            cout << left << setw(10) << node->SL;
+            cout << left << setw(10) << node->DonGia;
+            cout << endl;
             node=node->next;
         }
-        cout << endl;
     }
 }
 
-string MyProduct::getMaSP(int i) const
+void MyProduct::printfMyProduct(string s) const
 {
-    Node_MyProduct *node=this->head;
-
-    while (i--)
-        node=node->next;
-    return node->MaSP;
-}
-
-int MyProduct::getSL(int i) const
-{
-    Node_MyProduct *node=this->head;
-    while (i--)
-        node=node->next;
-    return node->SL;
-}
-
-int MyProduct::sizeofMyProduct() const
-{
-    int c=0;
-    Node_MyProduct *temp=this->head;
-    while(temp!=NULL)
+    if(this->head!=NULL)
     {
-        c++;
-        temp=temp->next;
+        Node_MyProduct *node = this->head;
+        while (node!=NULL)
+        {
+            if (node->MaHD==s)
+            {
+                cout << left << setw(30) << node->MaSP;
+                cout << left << setw(10) << node->SL;
+                cout << left << setw(10) << node->DonGia << endl;
+            }
+            node=node->next;
+        }
     }
-    return c;
 }
 
-float MyProduct::ThanhTien(const Product &p)
+float MyProduct::ThanhTien(string s) const
 {
-    float s=0;
-    for (int i=0;i<this->sizeofMyProduct();i++)
+    float t=0;
+    if(this->head!=NULL)
     {
-        s+=(p.getDonGia(this->getMaSP(i)))*(this->getSL(i));
+        Node_MyProduct *node = this->head;
+        while (node!=NULL)
+        {
+            if(node->MaHD==s)
+            {
+                t+=(node->SL)*(node->DonGia);
+            }
+            node=node->next;
+        }
     }
-    return s;
+    return t;
 }

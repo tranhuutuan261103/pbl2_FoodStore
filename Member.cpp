@@ -20,9 +20,20 @@ Member::~Member()
     this->head=NULL;
 }
 
-Member Member::InsertNodeAfter(string name,string sdt,Day ngaysinh,string mk,int diem)
+bool Member::CheckMaTV(string s) const
 {
-    Node_Member *temp=new Node_Member(name,sdt,ngaysinh,mk,diem,NULL);
+    Node_Member *p=this->head;
+    while (p!=NULL)
+    {
+        if (p->getSDT()==s) return true;
+        p=p->next;
+    }
+    return false;
+}
+
+Member Member::InsertNodeAfter(string name,string sdt,Day ngaysinh,int diem)
+{
+    Node_Member *temp=new Node_Member(name,sdt,ngaysinh,diem,NULL);
     if (this->head==NULL)
         this->head=temp;
     else
@@ -41,7 +52,7 @@ Member Member::DocFile(string TenFile)
     input_File.open(TenFile,ios::in);
     while (1)
     {
-        string s1,s2,s3,line;
+        string s1,s2,line;
         int d,m,y;
         int diem;
         getline(input_File,s1,'|');
@@ -56,21 +67,19 @@ Member Member::DocFile(string TenFile)
         getline(input_File,line,'|');
         Day D(d,m,y);
 
-        getline(input_File,s3,'|');
-
         input_File >> diem;
 
         getline(input_File,line,'\n');
 
         if (input_File.eof())
             break;
-        InsertNodeAfter(s1,s2,D,s3,diem);
+        InsertNodeAfter(s1,s2,D,diem);
     }
     input_File.close();
     return *this;
 }
 
-void Member::GhiFile(string TenFile)
+void Member::GhiFile(string TenFile) const
 {
     Node_Member *node = this->head;
     ofstream output_File;
@@ -92,9 +101,6 @@ void Member::GhiFile(string TenFile)
         output_File << "/";
 
         output_File << D.getYear();
-        output_File << "|";
-
-        output_File << node->mk;
         output_File << "|";
 
         output_File << node->diem << endl;
@@ -119,3 +125,53 @@ void Member::printfMember() const
         }
     }
 }
+
+int Member::getDiem(string s) const
+{
+    Node_Member *node=this->head;
+    while (node!=NULL)
+    {
+        if (s==node->getSDT()) break;
+        node=node->next;
+    }
+    return node->diem;
+}
+
+Member Member::UpdateDiem(string s,int d)
+{
+    Node_Member *node=this->head;
+    while (node!=NULL)
+    {
+        if (s==node->getSDT())
+        {
+            node->diem+=d;
+            break;
+        }
+        node=node->next;
+    }
+    return *this;
+}
+
+istream &operator>>(istream &in,Member &M)
+{
+    string name,sdt;
+    Day ngaysinh;
+    int diem=0;
+    do{
+        cout << "Nhap so dien thoai:";
+        in >> sdt;
+    }while(M.CheckMaTV(sdt)==true);
+    cout << "Nhap ho ten:";
+    in >> name;
+    cout << "Nhap ngay sinh:" << endl;
+    in >> ngaysinh;
+    M.InsertNodeAfter(name,sdt,ngaysinh,diem);
+    return in;
+}
+
+ostream &operator<<(ostream &out,const Member &M)
+{
+    M.printfMember();
+    return out;
+}
+

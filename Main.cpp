@@ -5,40 +5,103 @@
 #include "Staff.h"
 #include "Member.h"
 #include "Bill.h"
-#include "Voucher.h"
 #include "MyProduct.h"
+#include "Discount.h"
+#include "Menu.cpp"
 
 using namespace std;
 
+void GetData(Product &P,Staff &S,Member &M,Bill &B,MyProduct &MyP,Discount &D);
+void Menu(Product &P,Staff &S,Member &M,Bill &B,MyProduct &MyP,Discount &D);
+void SaveData(const Product &P,const Staff &S,const Member &M,const Bill &B,const MyProduct &MyP,const Discount &D);
+
 int main()
 {
-    Product L;
-    L.DocFile("Product.txt");
-
-    cout << L;
-    L.GhiFile("Product.txt");
-
+    Product P;
     Staff S;
-    S.DocFile("Staff.txt");
-    S.printfStaff();
-    S.GhiFile("Staff.txt");
-
     Member M;
-    M.DocFile("Member.txt");
-    M.printfMember();
-    M.GhiFile("Member.txt");
-
-    Day d1(14,5,2022),d2(16,5,2022);
-    Voucher V;
-    V.DocFile("Voucher.txt");
-    V.GhiFile("Voucher.txt");
-    V.printfVoucher();
-
     Bill B;
-    B.DocFile("Bill.txt");
-    B.GhiFile("Bill.txt");
-    B.printfBill(L,V);
+    MyProduct MyP;
+    Discount D;
+    GetData(P,S,M,B,MyP,D);
+    Menu(P,S,M,B,MyP,D);
+    SaveData(P,S,M,B,MyP,D);
     return 0;
+}
+
+void Menu(Product &P,Staff &S,Member &M,Bill &B,MyProduct &MyP,Discount &D)
+{
+    int choose;
+    do
+    {
+        system("cls");
+        cout << "1.Them san pham\n";
+        cout << "2.Them nhan vien\n";
+        cout << "3.Dang ky thanh vien\n";
+        cout << "4.Lap hoa don\n";
+        cout << "5.Xem tat ca cac hoa don\n";
+        cout << "0.Thoat\n";
+        cout << "Chon:";
+        cin >> choose;
+        cin.ignore();
+        switch(choose)
+        {
+        case 0:
+            break;
+        case 1:
+            system("cls");
+            P.printfProduct();
+            cout << "\n\n";
+            cin >> P;
+            break;
+        case 2:
+            system("cls");
+            S.printfStaff();
+            cout << "\n\n";
+            cin >> S;
+            break;
+        case 3:
+            system("cls");
+            M.printfMember();
+            cout << "\n\n";
+            cin >> M;
+            break;
+        case 4:
+            system("cls");
+            P.printfProduct();
+            B.CreateBill("NV01",P,MyP,M,D);
+            break;
+        case 5:
+            system("cls");
+            B.printfBill(P,MyP);
+            system("pause");
+            break;
+        default:
+            cout << "Nhap lai!";
+            system("pause");
+            break;
+        }
+    } while (choose);
+}
+
+void GetData(Product &P,Staff &S,Member &M,Bill &B,MyProduct &MyP,Discount &D)
+{
+    P.DocFile("Product.txt");
+    S.DocFile("Staff.txt");
+    M.DocFile("Member.txt");
+    B.DocFile("Bill.txt");
+    MyP.DocFile("MyProduct.txt");
+    D.DocFile("Discount.txt");
+}
+
+void SaveData(const Product &P,const Staff &S,const Member &M,const Bill &B,const MyProduct &MyP,const Discount &D)
+{
+    P.GhiFile("Product.txt");
+    S.GhiFile("Staff.txt");
+    M.GhiFile("Member.txt");
+    B.GhiFile("Bill.txt");
+    MyP.GhiFile("MyProduct.txt");
+    D.GhiFile("Discount.txt");
 }
 
 // Sản phẩm : class Product

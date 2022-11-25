@@ -8,16 +8,16 @@ using namespace std;
 
 class Node_Staff:public Person{
 private:
-    string mk;
+    string MaNV;
     string cmnd;
     string DiaChi;
     string email;
     float Luong;
     Node_Staff *next;
 public:
-    Node_Staff(string name,string sdt,Day ngaysinh,string mk,string cmnd,
+    Node_Staff(string MaNV,string name,string sdt,Day ngaysinh,string cmnd,
 string DiaChi,string email,float Luong,Node_Staff *next):Person(name,sdt,ngaysinh)
-,mk(mk),cmnd(cmnd),DiaChi(DiaChi),email(email),Luong(Luong),next(next){};
+,MaNV(MaNV),cmnd(cmnd),DiaChi(DiaChi),email(email),Luong(Luong),next(next){};
     friend class Staff;
 };
 
@@ -28,11 +28,14 @@ public:
     Staff();
     Staff(const Staff &S);
     ~Staff();
-    Staff InsertNodeAfter(string name,string sdt,Day ngaysinh,string mk,
+    bool CheckMaNV(string s) const;
+    Staff InsertNodeAfter(string MaNV,string name,string sdt,Day ngaysinh,
 string cmnd,string DiaChi,string email,float Luong);
     Staff DocFile(string tenFile);
-    void GhiFile(string tenFile);
+    void GhiFile(string tenFile) const;
     void printfStaff() const;
+    friend istream& operator>>(istream &in,Staff &S);
+    friend ostream& operator<<(ostream &out,const Staff &S);
 };
 
 #endif // Staff_h

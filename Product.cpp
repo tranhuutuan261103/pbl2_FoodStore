@@ -18,6 +18,43 @@ Product::~Product()
     this->head=NULL;
 }
 
+bool Product::CheckMaSP(string s) const
+{
+    Node *p=this->head;
+    while (p!=NULL)
+    {
+        if (p->MaSP==s) return true;
+        p=p->next;
+    }
+    return false;
+}
+
+int Product::GetSL(string s) const
+{
+    Node *p=this->head;
+    while (p!=NULL)
+    {
+        if (p->MaSP==s) break;
+        p=p->next;
+    }
+    return p->SL;
+}
+
+Product Product::UpDateSL(string s,int sl)
+{
+    Node *p=this->head;
+    while (p!=NULL)
+    {
+        if (p->MaSP==s)
+        {
+            p->SL-=sl;
+            break;
+        }
+        p=p->next;
+    }
+    return *this;
+}
+
 Product Product::InsertNodeAfter(string MaSP,string TenSP,int SL,float DonGia)
 {
     Node *temp = new Node(MaSP,TenSP,SL,DonGia,NULL);
@@ -42,9 +79,9 @@ Product Product::DocFile(string TenFile)
         string s1,s2,line;
         int sl;
         float dongia;
-        getline(input_File,s1,',');
+        getline(input_File,s1,'|');
 
-        getline(input_File,s2,',');
+        getline(input_File,s2,'|');
 
         input_File >> sl;
 
@@ -59,7 +96,7 @@ Product Product::DocFile(string TenFile)
     return *this;
 }
 
-void Product::GhiFile(string TenFile)
+void Product::GhiFile(string TenFile) const
 {
     Node *node = this->head;
     ofstream output_File;
@@ -67,9 +104,9 @@ void Product::GhiFile(string TenFile)
     while (node!=NULL)
     {
         output_File << node->MaSP;
-        output_File << ",";
+        output_File << "|";
         output_File << node->TenSP;
-        output_File << ",";
+        output_File << "|";
         output_File << node->SL << " " << node->DonGia << endl;
         node=node->next;
     }
@@ -98,8 +135,10 @@ istream &operator>>(istream &in,Product &P)
     string s1,s2;
     int sl;
     float dongia;
-    cout << "Nhap ma san pham:";
-    getline(std::cin,s1);
+    do {
+        cout << "Nhap ma san pham:";
+        getline(std::cin,s1);
+    } while (P.CheckMaSP(s1)==true);
     cout << "Nhap ten san pham:";
     getline(std::cin,s2);
     cout << "Nhap so luong:";

@@ -8,12 +8,11 @@ using namespace std;
 
 class Node_Member:public Person{
 private:
-    string mk;
     int diem;
     Node_Member *next;
 public:
-    Node_Member(string name,string sdt,Day ngaysinh,string mk,int diem,Node_Member *next):
-    Person(name,sdt,ngaysinh),mk(mk),diem(diem),next(next){};
+    Node_Member(string name,string sdt,Day ngaysinh,int diem,Node_Member *next):
+    Person(name,sdt,ngaysinh),diem(diem),next(next){};
     friend class Member;
 };
 
@@ -24,10 +23,15 @@ public:
     Member();
     Member(const Member &M);
     ~Member();
-    Member InsertNodeAfter(string name,string sdt,Day ngaysinh,string mk,int diem);
+    bool CheckMaTV(string s) const;
+    Member InsertNodeAfter(string name,string sdt,Day ngaysinh,int diem);
     Member DocFile(string tenFile);
-    void GhiFile(string tenFile);
+    void GhiFile(string tenFile) const;
     void printfMember() const;
+    int getDiem(string s) const;
+    Member UpdateDiem(string s,int d);
+    friend istream& operator>>(istream &in,Member &S);
+    friend ostream& operator<<(ostream &out,const Member &S);
 };
 
 #endif // Member_h

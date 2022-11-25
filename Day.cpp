@@ -63,7 +63,7 @@ int Day::lastDay(int m,int y)
 
 bool Day::checkDay()
 {
-    if (year>2021) return false;
+    if (year>2022) return false;
     if (month<1 || month>12) return false;
     if (day<1 || day>lastDay(month,year)) return false;
     return true;
