@@ -1,41 +1,31 @@
 #ifndef Staff_h
 #define Staff_h
-#include <bits/stdc++.h>
 #include "Person.h"
 #include "Day.h"
+#include "LinkedList.h"
 
 using namespace std;
 
-class Node_Staff:public Person{
-private:
-    string MaNV;
-    string cmnd;
-    string DiaChi;
-    string email;
-    float Luong;
-    Node_Staff *next;
-public:
-    Node_Staff(string MaNV,string name,string sdt,Day ngaysinh,string cmnd,
-string DiaChi,string email,float Luong,Node_Staff *next):Person(name,sdt,ngaysinh)
-,MaNV(MaNV),cmnd(cmnd),DiaChi(DiaChi),email(email),Luong(Luong),next(next){};
-    friend class Staff;
-};
-
 class Staff:public Person{
 private:
-    Node_Staff *head;
+    string IDStaff;
+    string CICard; // can cuoc cong dan
+    string Address;
+    string Email;
+    float Wage; // tien cong (luong)
 public:
-    Staff();
-    Staff(const Staff &S);
-    ~Staff();
-    bool CheckMaNV(string s) const;
-    Staff InsertNodeAfter(string MaNV,string name,string sdt,Day ngaysinh,
-string cmnd,string DiaChi,string email,float Luong);
-    Staff DocFile(string tenFile);
-    void GhiFile(string tenFile) const;
-    void printfStaff() const;
-    friend istream& operator>>(istream &in,Staff &S);
-    friend ostream& operator<<(ostream &out,const Staff &S);
+    Staff(){};
+    Staff(string IDStaff,string name,string sdt,Day ngaysinh,string CICard,
+string Address,string Email,float Wage):Person(name,sdt,ngaysinh)
+,IDStaff(IDStaff),CICard(CICard),Address(Address),Email(Email),Wage(Wage){};
+    ~Staff(){};
+    string getID() const;
+    Staff ReadNode(ifstream &file);
+    void SaveNode(ofstream &file) const;
+    friend istream &operator>>(istream &in,LinkedList<Staff> &S);
+    void printfIntro() const;
+    void printfNode() const;
 };
 
 #endif // Staff_h
+

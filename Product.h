@@ -1,39 +1,32 @@
 #ifndef Product_h
 #define Product_h
+
 #include <bits/stdc++.h>
+#include "LinkedList.h"
 
 using namespace std;
 
-class Node{
-private:
-    string MaSP;
-    string TenSP;
-    int SL;
-    float DonGia;
-    Node *next;
-public:
-    Node(string MaSP,string TenSP,int SL,float DonGia,Node *next):MaSP(MaSP),
-TenSP(TenSP),SL(SL),DonGia(DonGia),next(next){};
-    friend class Product;
-};
 
 class Product{
-private:
-    Node *head;
+    string IDProduct;
+    string NameProduct;
+    string IDCategory;
+    int amount; // so luong san pham
+    float Price; // don gia 1 san pham
 public:
-    Product();
+    Product(){};
+    Product(string IDProduct,string NameProduct,string IDCategory,int amount,float Price);
     Product(const Product &p);
-    ~Product();
-    bool CheckMaSP(string s) const;
-    int GetSL(string s) const;
-    Product UpDateSL(string s,int sl);
-    Product InsertNodeAfter(string MaSP,string TenSP,int SL,float DonGia);
-    Product DocFile(string tenFile);
-    void GhiFile(string tenFile) const;
-    void printfProduct() const;
-    friend istream &operator>>(istream &in,Product &P);
-    friend ostream &operator<<(ostream &out,const Product &P);
-    float getDonGia(string s) const;
+    ~Product(){};
+    string getID() const;
+    int getAmount() const;
+    float getPrice() const;
+    void UpDateAmount(int amount);
+    Product ReadNode(ifstream &file);
+    void SaveNode(ofstream &file) const;
+    friend istream &operator>>(istream &in,LinkedList<Product> &P);
+    void printfIntro() const;
+    void printfNode() const;
 };
 
 #endif // Product_h

@@ -6,18 +6,20 @@ using namespace std;
 
 class Discount{
 private:
-    float DiemHoaHong;
-    float MucChietKhau;
+    float PointRate;
+    float DiscountRate;
 public:
     Discount(int=0,int=0);
     Discount(const Discount &Ds);
     ~Discount();
     Discount SetDiscount(int x,int y);
-    Discount DocFile(string tenFile);
-    void GhiFile(string tenFile) const;
+    Discount ReadNode(string tenFile);
+    void SaveNode(string tenFile) const;
     void printfDiscount() const;
-    float getMucDiemHH() const;
-    float getMucCK() const;
+    float getPointRate() const;
+    float getDiscountRate() const;
+    int CashToPoint(float cash) const;
+    float Change(int point) const;
 };
 
 

@@ -2,172 +2,97 @@
 #include "Staff.h"
 #include "Member.h"
 #include "Product.h"
-#include "Bill.h"
+#include "Detail.h"
 #include "Day.h"
 #include "Discount.h"
-
-float ChietKhau(int diem,float mucCK)
-{
-    return diem*mucCK;
-}
-
-int getDiemHH(float t,float MucDiemHH)
-{
-    return t*MucDiemHH;
-}
+#include "Bill.h"
 
 using namespace std;
 
-Bill::Bill()
+string Bill::getID() const
 {
-    this->head=NULL;
+    return this->IDBill;
 }
 
-Bill::Bill(const Bill &B)
+Bill Bill::ReadNode(ifstream &file)
 {
-    this->head=B.head;
+    string line;
+    int d,m,y;
+    getline(file,this->IDBill,'|');
+
+    getline(file,this->IDMember,'|');
+
+    file >> d;
+    getline(file,line,'/');
+    file >> m;
+    getline(file,line,'/');
+    file >> y;
+    getline(file,line,'|');
+    Day D(d,m,y);
+    this->BillDay=D;
+
+    getline(file,this->IDStaff,'|');
+
+    file >> this->Point;
+
+    file >> this->DiscountRate;
+
+    getline(file,line,'\n');
+    return *this;
+}
+void Bill::SaveNode(ofstream &file) const
+{
+    file << this->IDBill;
+    file << "|";
+
+    file << this->IDMember;
+    file << "|";
+
+    Day D=this->BillDay;
+
+    file << D.getDay();
+    file << "/";
+
+    file << D.getMonth();
+    file << "/";
+
+    file << D.getYear();
+    file << "|";
+
+    file << this->IDStaff;
+    file << "|";
+
+    file << this->Point << " " << this->DiscountRate ;
 }
 
-Bill::~Bill()
-{
-    this->head=NULL;
-}
 
-bool Bill::CheckMaHD(string s) const
+float Bill::Cash(string s,LinkedList<Detail> &D)
 {
-    Node_Bill *p=this->head;
+    float t=0;
+    Node<Detail> *p=D.getHead();
+    Detail node_cur;
     while (p!=NULL)
     {
-        if (p->MaHD==s) return false;
-        p=p->next;
-    }
-    return true;
-}
-
-Bill Bill::InsertNodeAfter(string MaHD,string MaTV,Day D,string MaNV,int diem,float mucChietKhau)
-{
-    Node_Bill *temp=new Node_Bill(MaHD,MaTV,D,MaNV,diem,mucChietKhau,NULL);
-    if (this->head==NULL)
-        this->head=temp;
-    else
-    {
-        Node_Bill *node = this->head;
-        while ( node->next!=NULL )
-            node = node->next;
-        node->next = temp;
-    }
-    return *this;
-}
-
-Bill Bill::DocFile(string TenFile)
-{
-    ifstream input_File;
-    input_File.open(TenFile,ios::in);
-    while (1)
-    {
-        string s1,s2,s3,line,s;
-        int d,m,y;
-        int diem;
-        float mucCK;
-        getline(input_File,s1,'|');
-
-        getline(input_File,s2,'|');
-
-        input_File >> d;
-        getline(input_File,line,'/');
-        input_File >> m;
-        getline(input_File,line,'/');
-        input_File >> y;
-        getline(input_File,line,'|');
-        Day D(d,m,y);
-
-        getline(input_File,s3,'|');
-
-        input_File >> diem;
-
-        input_File >> mucCK;
-
-        getline(input_File,line,'\n');
-
-        if (input_File.eof())
-            break;
-        InsertNodeAfter(s1,s2,D,s3,diem,mucCK);
-    }
-    input_File.close();
-    return *this;
-}
-
-void Bill::GhiFile(string TenFile) const
-{
-    Node_Bill *node = this->head;
-    ofstream output_File;
-    output_File.open(TenFile,ios::out | ios::trunc);
-    while (node!=NULL)
-    {
-        output_File << node->MaHD;
-        output_File << "|";
-
-        output_File << node->MaTV;
-        output_File << "|";
-
-        Day D=node->ngaynhap;
-
-        output_File << D.getDay();
-        output_File << "/";
-
-        output_File << D.getMonth();
-        output_File << "/";
-
-        output_File << D.getYear();
-        output_File << "|";
-
-        output_File << node->MaNV;
-        output_File << "|";
-
-        output_File << node->diem << " " << node->mucChietKhau << endl;
-
-        node=node->next;
-    }
-    output_File.close();
-}
-
-void Bill::printfBill(const Product &p,const MyProduct &MyP) const
-{
-    if(this->head!=NULL)
-    {
-        Node_Bill *node = this->head;
-        while (node!=NULL)
+        node_cur=p->getNode();
+        if(node_cur.getID()==s)
         {
-            // string MaHD,string MaTV,Day D,string MaNV,int diem,float mucChietKhau
-            cout << left << setw(20) << node->MaHD ;
-            cout << left << setw(12) << node->MaTV;
-            cout << node->ngaynhap;
-            cout << left << setw(15) << node->MaNV;
-            cout << left << setw(10) << node->diem;
-            cout << left << setw(10) << node->mucChietKhau;
-            cout << endl;
-            MyP.printfMyProduct(node->MaHD);
-            float t=MyP.ThanhTien(node->MaHD);
-            cout << left << setw(15) << "Tong:" << t << endl;
-            float c=ChietKhau(node->diem,node->mucChietKhau);
-            cout << left << setw(15) << "Chiet khau:" << c << endl;
-            cout << left << setw(15) << "Thanh tien:" << t-c << endl;
-            cout << endl;
-
-            node=node->next;
+            t+=(node_cur.getAmount()*node_cur.getPrice());
         }
+        p=p->getNext();
     }
+    return t;
 }
 
-Bill Bill::CreateBill(string MaNV,Product &P,MyProduct &MyP,Member &M,const Discount &Ds)
+
+Bill Bill::CreateBill(string MaNV,LinkedList<Bill> &B,LinkedList<Product> &P,LinkedList<Detail> &Dl,LinkedList<Member> &M,const Discount &Ds)
 {
     string maHD,maTV,s;
     int sl,diem=0;
-    float mucCK=Ds.getMucCK();
+    float mucCK=Ds.getDiscountRate();
     do{
         cout << "Nhap ma hoa don:";
         cin >> maHD;
-    }while (!this->CheckMaHD(maHD));
+    }while (B.CheckID(maHD)==true);
     Day D;
     cout << "Ngay nhap hoa don:" << endl;
     cin >> D;
@@ -177,39 +102,72 @@ Bill Bill::CreateBill(string MaNV,Product &P,MyProduct &MyP,Member &M,const Disc
             cout << "Nhap ma san pham(nhap 0 de dung):";
             cin >> s;
             if (s=="0") break;
-        }while (!P.CheckMaSP(s));
+        }while (!P.CheckID(s));
         if (s=="0") break;
+        Product p=P.getNode(s); //
         do {
             cout << "Nhap so luong:";
             cin >> sl;
-        }while (sl>P.GetSL(s) || sl<=0);
-        P.UpDateSL(s,sl);
-        MyP.InsertNodeAfter(maHD,s,sl,P.getDonGia(s));
+        }while (sl>p.getAmount() || sl<=0);
+        p.UpDateAmount(-sl);
+        P.UpDateNode(s,p);
+        Detail myP(maHD,s,sl,p.getPrice());
+        Dl.InsertNodeAfter(myP);
     } while (1);
 
     do {
         cout << "Nhap ma thanh vien(nhap 0 de thanh toan ngay):" ;
         cin >> maTV;
-    }while(maTV!="0" && M.CheckMaTV(maTV)==false);
+    }while(maTV!="0" && M.CheckID(maTV)==false);
 
-    float t=MyP.ThanhTien(maHD);
+    Bill tempbill;
+    float t=tempbill.Cash(maHD,Dl);
     cout << "Tong tien:" << t << endl;
 
     if (maTV=="0")
         diem=0;
     else{
-        cout << "Diem cua ban la:" << M.getDiem(maTV) << endl;
-        cout << "Muc chiet khau moi diem:" << Ds.getMucCK() << endl;
+        Member m=M.getNode(maTV);
+
+        cout << "Diem cua ban la:" << m.getPoint() << endl;
+        cout << "Muc chiet khau moi diem:" << Ds.getDiscountRate() << endl;
         do {
             cout << "Nhap muc diem quy doi:" ;
             cin >> diem;
-        } while (diem<0 || ChietKhau(diem,mucCK) >= t || diem>M.getDiem(maTV));
-        M.UpdateDiem(maTV,-diem);
-        int new_diem=getDiemHH(t,Ds.getMucDiemHH());
-        M.UpdateDiem(maTV,new_diem);
+        } while (diem<0 || Ds.Change(diem) >= t || diem>m.getPoint());
+
+        m.UpDatePoint(-diem);
+
+        int new_diem=Ds.CashToPoint(t);
+        m.UpDatePoint(new_diem);
+        M.UpDateNode(maTV,m);
     }
 
-    this->InsertNodeAfter(maHD,maTV,D,MaNV,diem,mucCK);
+    cout << "Thanh tien:" << t-Ds.Change(diem) << endl;
+
+    Bill b(maHD,maTV,D,MaNV,diem,mucCK);
+    B.InsertNodeAfter(b);
+    *this=b;
     return *this;
 }
 
+void Bill::printfIntro() const
+{
+    cout << left << setw(15) << "Ma hoa don" ;
+    cout << left << setw(20) << "Ma thanh vien" ;
+    cout << left << setw(14) << "Ngay lap HD" ;
+    cout << left << setw(15) << "Ma nhan vien" << endl ;
+//    cout << left << setw(10) << "Diem" ;
+//    cout << left << setw(10) << "Chiet khau" << endl;
+ //   cout << left << setw(10) << "Thanh toan" << endl;
+}
+void Bill::printfNode() const
+{
+    cout << left << setw(15) << this->IDBill ;
+    cout << left << setw(20) << this->IDMember;
+    cout << this->BillDay;
+    cout << left << setw(15) << this->IDStaff << endl;
+//    cout << left << setw(10) << this-> << endl;
+ //   cout << left << setw(10) << this->Point;
+  //  cout << left << setw(10) << this->DiscountRate << endl;
+}

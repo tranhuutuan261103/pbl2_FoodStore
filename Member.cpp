@@ -5,154 +5,70 @@
 
 using namespace std;
 
-Member::Member()
+string Member::getID() const
 {
-    this->head=NULL;
+    return this->getPhoneNumber();
 }
 
-Member::Member(const Member &M)
+int Member::getPoint() const
 {
-    this->head=M.head;
+    return this->Point;
 }
 
-Member::~Member()
+int Member::UpDatePoint(int point)
 {
-    this->head=NULL;
+    return this->Point+=point;
 }
 
-bool Member::CheckMaTV(string s) const
+Member Member::ReadNode(ifstream &file)
 {
-    Node_Member *p=this->head;
-    while (p!=NULL)
-    {
-        if (p->getSDT()==s) return true;
-        p=p->next;
-    }
-    return false;
-}
+    string name,phone_number,line;
+    int d,m,y;
+    getline(file,name,'|');
+    this->setName(name);
 
-Member Member::InsertNodeAfter(string name,string sdt,Day ngaysinh,int diem)
-{
-    Node_Member *temp=new Node_Member(name,sdt,ngaysinh,diem,NULL);
-    if (this->head==NULL)
-        this->head=temp;
-    else
-    {
-        Node_Member *node = this->head;
-        while ( node->next!=NULL )
-            node = node->next;
-        node->next = temp;
-    }
+    getline(file,phone_number,'|');
+    this->setPhoneNumber(phone_number);
+
+    file >> d;
+    getline(file,line,'/');
+    file >> m;
+    getline(file,line,'/');
+    file >> y;
+    getline(file,line,'|');
+    Day D(d,m,y);
+
+    this->setNS(D);
+
+    file >> this->Point;
+
+    getline(file,line,'\n');
     return *this;
 }
 
-Member Member::DocFile(string TenFile)
+void Member::SaveNode(ofstream &file) const
 {
-    ifstream input_File;
-    input_File.open(TenFile,ios::in);
-    while (1)
-    {
-        string s1,s2,line;
-        int d,m,y;
-        int diem;
-        getline(input_File,s1,'|');
+    file << this->getName();
+    file << "|";
 
-        getline(input_File,s2,'|');
+    file << this->getPhoneNumber();
+    file << "|";
 
-        input_File >> d;
-        getline(input_File,line,'/');
-        input_File >> m;
-        getline(input_File,line,'/');
-        input_File >> y;
-        getline(input_File,line,'|');
-        Day D(d,m,y);
+    Day D=this->getNS();
 
-        input_File >> diem;
+    file << D.getDay();
+    file << "/";
 
-        getline(input_File,line,'\n');
+    file << D.getMonth();
+    file << "/";
 
-        if (input_File.eof())
-            break;
-        InsertNodeAfter(s1,s2,D,diem);
-    }
-    input_File.close();
-    return *this;
+    file << D.getYear();
+    file << "|";
+
+    file << this->Point;
 }
 
-void Member::GhiFile(string TenFile) const
-{
-    Node_Member *node = this->head;
-    ofstream output_File;
-    output_File.open(TenFile,ios::out | ios::trunc);
-    while (node!=NULL)
-    {
-        output_File << node->getName();
-        output_File << "|";
-
-        output_File << node->getSDT();
-        output_File << "|";
-
-        Day D=node->getNS();
-
-        output_File << D.getDay();
-        output_File << "/";
-
-        output_File << D.getMonth();
-        output_File << "/";
-
-        output_File << D.getYear();
-        output_File << "|";
-
-        output_File << node->diem << endl;
-        node=node->next;
-    }
-    output_File.close();
-}
-
-void Member::printfMember() const
-{
-    if(this->head!=NULL)
-    {
-        Node_Member *node = this->head;
-        while (node!=NULL)
-        {
-            cout << left << setw(20) << node->getName() ;
-            cout << left << setw(12) << node->getSDT();
-            cout << node->getNS();
-            cout << left << setw(10) << node->diem;
-            cout << endl;
-            node=node->next;
-        }
-    }
-}
-
-int Member::getDiem(string s) const
-{
-    Node_Member *node=this->head;
-    while (node!=NULL)
-    {
-        if (s==node->getSDT()) break;
-        node=node->next;
-    }
-    return node->diem;
-}
-
-Member Member::UpdateDiem(string s,int d)
-{
-    Node_Member *node=this->head;
-    while (node!=NULL)
-    {
-        if (s==node->getSDT())
-        {
-            node->diem+=d;
-            break;
-        }
-        node=node->next;
-    }
-    return *this;
-}
-
-istream &operator>>(istream &in,Member &M)
+istream &operator>>(istream &in,LinkedList<Member> &M)
 {
     string name,sdt;
     Day ngaysinh;
@@ -160,18 +76,30 @@ istream &operator>>(istream &in,Member &M)
     do{
         cout << "Nhap so dien thoai:";
         in >> sdt;
-    }while(M.CheckMaTV(sdt)==true);
+    }while(M.CheckID(sdt)==true);
     cout << "Nhap ho ten:";
-    in >> name;
+    cin.ignore();
+    getline(in,name);
     cout << "Nhap ngay sinh:" << endl;
     in >> ngaysinh;
-    M.InsertNodeAfter(name,sdt,ngaysinh,diem);
+    Member m(name,sdt,ngaysinh,diem);
+    M.InsertNodeAfter(m);
     return in;
 }
 
-ostream &operator<<(ostream &out,const Member &M)
+void Member::printfIntro() const
 {
-    M.printfMember();
-    return out;
+    cout << left << setw(20) << "Ho ten" ;
+    cout << left << setw(18) << "So dien thoai";
+    cout << left << setw(14) << "Nam sinh";
+    cout << left << setw(10) << "Diem" ;
+    cout << endl;
 }
-
+void Member::printfNode() const
+{
+    cout << left << setw(20) << this->getName() ;
+    cout << left << setw(18) << this->getPhoneNumber();
+    cout << this->getNS();
+    cout << left << setw(10) << this->Point;
+    cout << endl;
+}

@@ -2,32 +2,39 @@
 #include "Person.h"
 #include "Day.h"
 
-void Person::setName(string name)
+Person::Person(const Person &P)
 {
-    this->name=name;
+    this->Name=P.Name;
+    this->PhoneNumber=P.PhoneNumber;
+    this->DayOfBirth=P.DayOfBirth;
+}
+
+void Person::setName(string Name)
+{
+    this->Name=Name;
 }
 string Person::getName() const
 {
-    return name;
+    return Name;
 }
-void Person::setSDT(string sdt)
+void Person::setPhoneNumber(string PhoneNumber)
 {
-    this->sdt=sdt;
+    this->PhoneNumber=PhoneNumber;
 }
-string Person::getSDT() const
+string Person::getPhoneNumber() const
 {
-    return sdt;
+    return PhoneNumber;
 }
 void Person::setNS(Day D)
 {
-    this->ngaysinh=D;
+    this->DayOfBirth=D;
 }
 Day Person::getNS() const
 {
-    return ngaysinh;
+    return DayOfBirth;
 }
 
 void Person::printfPerson()
 {
-    cout << getName() << getSDT() << getNS();
+    cout << getName() << getPhoneNumber() << getNS();
 }

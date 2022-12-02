@@ -4,14 +4,14 @@
 
 Discount::Discount(int x,int y)
 {
-    this->DiemHoaHong=x;
-    this->MucChietKhau=y;
+    this->PointRate=x;
+    this->DiscountRate=y;
 }
 
 Discount::Discount(const Discount &Ds)
 {
-    this->DiemHoaHong=Ds.DiemHoaHong;
-    this->MucChietKhau=Ds.MucChietKhau;
+    this->PointRate=Ds.PointRate;
+    this->DiscountRate=Ds.DiscountRate;
 }
 
 Discount::~Discount()
@@ -21,42 +21,53 @@ Discount::~Discount()
 
 Discount Discount::SetDiscount(int x,int y)
 {
-    this->DiemHoaHong=x;
-    this->MucChietKhau=y;
+    this->PointRate=x;
+    this->DiscountRate=y;
     return *this;
 }
 
-Discount Discount::DocFile(string TenFile)
+Discount Discount::ReadNode(string TenFile)
 {
     ifstream input_File;
     input_File.open(TenFile,ios::in);
-    input_File >> this->DiemHoaHong;
-    input_File >> this->MucChietKhau;
+    input_File >> this->PointRate;
+    input_File >> this->DiscountRate;
     input_File.close();
     return *this;
 }
 
-void Discount::GhiFile(string TenFile) const
+void Discount::SaveNode(string TenFile) const
 {
     ofstream output_File;
     output_File.open(TenFile,ios::out | ios::trunc);
-    output_File << this->DiemHoaHong << " ";
-    output_File << this->MucChietKhau;
+    output_File << this->PointRate << " ";
+    output_File << this->DiscountRate;
     output_File.close();
 }
 
 void Discount::printfDiscount() const
 {
-    cout << this->DiemHoaHong << " ";
-    cout << this->MucChietKhau << endl;
+    cout << this->PointRate << " ";
+    cout << this->DiscountRate << endl;
 }
 
-float Discount::getMucDiemHH() const
+float Discount::getPointRate() const
 {
-    return this->DiemHoaHong;
+    return this->PointRate;
 }
 
-float Discount::getMucCK() const
+float Discount::getDiscountRate() const
 {
-    return this->MucChietKhau;
+    return this->DiscountRate;
 }
+
+int Discount::CashToPoint(float cash) const
+{
+    return cash*(this->getPointRate());
+}
+
+float Discount::Change(int point) const
+{
+    return point*(this->getDiscountRate());
+}
+

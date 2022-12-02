@@ -7,18 +7,18 @@ using namespace std;
 
 class Person{
 private:
-    string name;
-    string sdt;
-    Day ngaysinh;
+    string Name;
+    string PhoneNumber;
+    Day DayOfBirth;
 public:
-    Person(){}
-    Person(string name,string sdt,Day ngaysinh):name(name),sdt(sdt),ngaysinh(ngaysinh){}
+    Person(){};
+    Person(string Name,string PhoneNumber,Day DayOfBirth):Name(Name),PhoneNumber(PhoneNumber),DayOfBirth(DayOfBirth){};
     Person(const Person &P);
     ~Person(){}
-    void setName(string name);
+    void setName(string Name);
     string getName() const;
-    void setSDT(string sdt);
-    string getSDT() const;
+    void setPhoneNumber(string PhoneNumber);
+    string getPhoneNumber() const;
     void setNS(Day D);
     Day getNS() const;
     void printfPerson();

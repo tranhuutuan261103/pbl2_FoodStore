@@ -5,182 +5,132 @@
 
 using namespace std;
 
-Staff::Staff()
+string Staff::getID() const
 {
-    this->head=NULL;
+    return this->IDStaff;
 }
 
-Staff::Staff(const Staff &S)
+Staff Staff::ReadNode(ifstream &file)
 {
-    this->head=S.head;
-}
+    string name,phone_number,line;
+    int d,m,y;
+    getline(file,this->IDStaff,'|');
 
-Staff::~Staff()
-{
-    this->head=NULL;
-}
+    getline(file,name,'|');
+    this->setName(name);
 
-bool Staff::CheckMaNV(string s) const
-{
-    Node_Staff *p=this->head;
-    while (p!=NULL)
-    {
-        if (p->MaNV==s) return true;
-        p=p->next;
-    }
-    return false;
-}
+    getline(file,phone_number,'|');
+    this->setPhoneNumber(phone_number);
 
-Staff Staff::InsertNodeAfter(string MaNV,string name,string sdt,Day ngaysinh,
-string cmnd,string DiaChi,string email,float Luong)
-{
-    Node_Staff *temp=new Node_Staff(MaNV,name,sdt,ngaysinh,cmnd,DiaChi,email,Luong,NULL);
-    if (this->head==NULL)
-        this->head=temp;
-    else
-    {
-        Node_Staff *node = this->head;
-        while ( node->next!=NULL )
-            node = node->next;
-        node->next = temp;
-    }
+    file >> d;
+    getline(file,line,'/');
+    file >> m;
+    getline(file,line,'/');
+    file >> y;
+    getline(file,line,'|');
+    Day D(d,m,y);
+
+    this->setNS(D);
+
+    getline(file,this->CICard,'|');
+
+    getline(file,this->Address,'|');
+
+    getline(file,this->Email,'|');
+
+    file >> this->Wage;
+
+    getline(file,line,'\n');
     return *this;
 }
 
-Staff Staff::DocFile(string TenFile)
+void Staff::SaveNode(ofstream &file) const
 {
-    ifstream input_File;
-    input_File.open(TenFile,ios::in);
-    while (1)
-    {
-        string s1,s2,s3,s4,s5,s6,line;
-        int d,m,y;
-        float luong;
-        getline(input_File,s1,'|');
+    file << this->IDStaff;
+    file << "|";
 
-        getline(input_File,s2,'|');
+    file << this->getName();
+    file << "|";
 
-        getline(input_File,s3,'|');
+    file << this->getPhoneNumber();
+    file << "|";
 
-        input_File >> d;
-        getline(input_File,line,'/');
-        input_File >> m;
-        getline(input_File,line,'/');
-        input_File >> y;
-        getline(input_File,line,'|');
-        Day D(d,m,y);
+    Day D=this->getNS();
 
+    file << D.getDay();
+    file << "/";
 
-        getline(input_File,s4,'|');
+    file << D.getMonth();
+    file << "/";
 
-        getline(input_File,s5,'|');
+    file << D.getYear();
+    file << "|";
 
-        getline(input_File,s6,'|');
+    file << this->CICard;
+    file << "|";
 
-        input_File >> luong;
+    file << this->Address;
+    file << "|";
 
-        getline(input_File,line,'\n');
+    file << this->Email;
+    file << "|";
 
-        if (input_File.eof())
-            break;
-        InsertNodeAfter(s1,s2,s3,D,s4,s5,s6,luong);
-    }
-    input_File.close();
-    return *this;
+    file << this->Wage;
 }
 
-void Staff::GhiFile(string TenFile) const
+istream &operator>>(istream &in,LinkedList<Staff> &S)
 {
-    Node_Staff *node = this->head;
-    ofstream output_File;
-    output_File.open(TenFile,ios::out | ios::trunc);
-    while (node!=NULL)
-    {
-        output_File << node->MaNV;
-        output_File << "|";
-
-        output_File << node->getName();
-        output_File << "|";
-
-        output_File << node->getSDT();
-        output_File << "|";
-
-        Day D=node->getNS();
-
-        output_File << D.getDay();
-        output_File << "/";
-
-        output_File << D.getMonth();
-        output_File << "/";
-
-        output_File << D.getYear();
-        output_File << "|";
-
-        output_File << node->cmnd;
-        output_File << "|";
-
-        output_File << node->DiaChi;
-        output_File << "|";
-
-        output_File << node->email;
-        output_File << "|";
-
-        output_File << node->Luong << endl;
-        node=node->next;
-    }
-    output_File.close();
-}
-
-void Staff::printfStaff() const
-{
-    if(this->head!=NULL)
-    {
-        Node_Staff *node = this->head;
-        while (node!=NULL)
-        {
-            cout << left << setw(15) << node->MaNV;
-            cout << left << setw(20) << node->getName() ;
-            cout << left << setw(12) << node->getSDT();
-            cout << node->getNS();
-            cout << left << setw(15) << node->cmnd;
-            cout << left << setw(30) << node->DiaChi;
-            cout << left << setw(35) << node->email;
-            cout << left << setw(10) << node->Luong;
-            cout << endl;
-            node=node->next;
-        }
-    }
-}
-
-istream &operator>>(istream &in,Staff &S)
-{
-    string maNV,name,sdt,cmnd,diachi,email;
+    string maNV,name,sdt,cccd,diachi,email;
     Day ngaysinh;
     float luong;
     do{
         cout << "Nhap ma nhan vien:";
         in >> maNV;
-    } while (S.CheckMaNV(maNV)==true);
+    } while (S.CheckID(maNV)==true);
     cout << "Nhap ho ten nhan vien:";
-    in >> name;
+    cin.ignore();
+    getline(in,name);
     cout << "Nhap so dien thoai:";
     in >> sdt;
     cout << "Nhap ngay sinh:" << endl;
     in >> ngaysinh;
     cout << "Nhap can cuoc cong dan:";
-    in >> cmnd;
+    in >> cccd;
     cout << "Nhap dia chi:";
-    in >> diachi;
+    cin.ignore();
+    getline(in,diachi);
     cout << "Nhap email:";
     in >> email;
     cout << "Nhap he so luong:";
     in >> luong;
-    S.InsertNodeAfter(maNV,name,sdt,ngaysinh,cmnd,diachi,email,luong);
+
+    Staff s(maNV,name,sdt,ngaysinh,cccd,diachi,email,luong);
+    S.InsertNodeAfter(s);
     return in;
 }
 
-ostream &operator<<(ostream &out,const Staff &S)
+void Staff::printfIntro() const
 {
-    S.printfStaff();
-    return out;
+    cout << left << setw(15) << "Ma nhan vien";
+    cout << left << setw(20) << "Ten nhan vien";
+    cout << left << setw(18) << "So dien thoai";
+    cout << left << setw(14) << "Nam sinh";
+    cout << left << setw(15) << "Can cuoc cd";
+    cout << left << setw(30) << "Dia chi";
+    cout << left << setw(35) << "Email";
+    cout << left << setw(10) << "He so luong";
+    cout << endl;
+}
+
+void Staff::printfNode() const
+{
+    cout << left << setw(15) << this->IDStaff;
+    cout << left << setw(20) << this->getName();
+    cout << left << setw(18) << this->getPhoneNumber();
+    cout << this->getNS();
+    cout << left << setw(15) << this->CICard;
+    cout << left << setw(30) << this->Address;
+    cout << left << setw(35) << this->Email;
+    cout << left << setw(10) << this->Wage;
+    cout << endl;
 }

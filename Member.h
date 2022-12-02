@@ -3,35 +3,24 @@
 #include <bits/stdc++.h>
 #include "Person.h"
 #include "Day.h"
-
-using namespace std;
-
-class Node_Member:public Person{
-private:
-    int diem;
-    Node_Member *next;
-public:
-    Node_Member(string name,string sdt,Day ngaysinh,int diem,Node_Member *next):
-    Person(name,sdt,ngaysinh),diem(diem),next(next){};
-    friend class Member;
-};
+#include "LinkedList.h"
 
 class Member:public Person{
 private:
-    Node_Member *head;
+    int Point;
 public:
-    Member();
-    Member(const Member &M);
-    ~Member();
-    bool CheckMaTV(string s) const;
-    Member InsertNodeAfter(string name,string sdt,Day ngaysinh,int diem);
-    Member DocFile(string tenFile);
-    void GhiFile(string tenFile) const;
-    void printfMember() const;
-    int getDiem(string s) const;
-    Member UpdateDiem(string s,int d);
-    friend istream& operator>>(istream &in,Member &S);
-    friend ostream& operator<<(ostream &out,const Member &S);
+    Member(){};
+    Member(string name,string sdt,Day ngaysinh,int Point):Person(name,sdt,ngaysinh),Point(Point){};
+    ~Member(){};
+    string getID() const;
+    int getPoint() const;
+    int UpDatePoint(int point);
+    Member ReadNode(ifstream &file);
+    void SaveNode(ofstream &file) const;
+    friend istream &operator>>(istream &in,LinkedList<Member> &M);
+    void printfIntro() const;
+    void printfNode() const;
 };
 
 #endif // Member_h
+
