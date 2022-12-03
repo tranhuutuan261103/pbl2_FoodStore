@@ -16,6 +16,7 @@ void GetData(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,L
 void Menu(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void PrintfList(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void CreateNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
+void EditNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void SaveData(const LinkedList<Product> &P,const LinkedList<Staff> &S,const LinkedList<Member> &M,const LinkedList<Bill> &B,const LinkedList<Detail> &Dtl,const LinkedList<Category> &C,const Discount &D);
 
 int main()
@@ -53,7 +54,6 @@ void Menu(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,Link
         {
         case 0:
             cout << "\n\n";
-            system("pause");
             break;
         case 1:
             PrintfList(P,S,M,B,Dtl,C,D);
@@ -62,8 +62,7 @@ void Menu(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,Link
             CreateNode(P,S,M,B,Dtl,C,D);
             break;
         case 3:
-            system("cls");
-            system("pause");
+            EditNode(P,S,M,B,Dtl,C,D);
             break;
         case 4:
             system("cls");
@@ -189,6 +188,67 @@ void CreateNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &
             M.printfList();
             cout << "\n\n";
             cin >> M;
+            system("pause");
+            break;
+        default:
+            cout << "Nhap lai!";
+            system("pause");
+            break;
+        }
+    } while (choose);
+}
+
+void EditNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D)
+{
+    float x,y;
+    string s;
+    Product p;
+    int choose;
+    do
+    {
+        system("cls");
+        cout << "1.Cap nhat so luong san pham\n";
+        cout << "2.Cap nhat don gia san pham\n";
+        cout << "3.Cap nhat muc chiet khau\n";
+        cout << "0.Thoat\n";
+        cout << "Chon:";
+        cin >> choose;
+        cin.ignore();
+        switch(choose)
+        {
+        case 0:
+            break;
+        case 1:
+            system("cls");
+            P.printfList();
+            cout << "\n\n";
+            do {
+                cout << "Nhap ma san pham:";
+                getline(cin,s);
+            } while (P.CheckID(s)==false);
+            p.EditAmount(s,P);
+            system("pause");
+            break;
+        case 2:
+            system("cls");
+            P.printfList();
+            cout << "\n\n";
+            do {
+                cout << "Nhap ma san pham:";
+                getline(cin,s);
+            } while (P.CheckID(s)==false);
+            p.EditPrice(s,P);
+            system("pause");
+            break;
+        case 3:
+            system("cls");
+            D.printfDiscount();
+            cout << "\n\n";
+            cout << "Nhap muc quy doi ve diem:";
+            cin >> x;
+            cout << "Nhap muc chiet khau moi diem:";
+            cin >> y;
+            D.SetDiscount(x,y);
             system("pause");
             break;
         default:

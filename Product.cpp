@@ -41,6 +41,11 @@ void Product::UpDateAmount(int amount)
     this->amount+=amount;
 }
 
+void Product::UpDatePrice(int price)
+{
+    this->Price=price;
+}
+
 Product Product::ReadNode(ifstream &file)
 {
     string line;
@@ -112,4 +117,48 @@ void Product::printfNode() const
     cout << left << setw(10) << this->Price;
     cout << endl;
 
+}
+
+void Product::EditAmount(string s,LinkedList<Product> &P)
+{
+    int amount;
+    do{
+        cout << "Nhap so luong them vao:";
+        cin >> amount;
+    } while (amount<0);
+    Node<Product> *p=P.getHead();
+    Product node_cur;
+    while (p!=NULL)
+    {
+        node_cur=p->getNode();
+        if(node_cur.getID()==s)
+        {
+            node_cur.UpDateAmount(amount);
+            break;
+        }
+        p=p->getNext();
+    }
+    P.UpDateNode(s,node_cur);
+}
+
+void Product::EditPrice(string s,LinkedList<Product> &P)
+{
+    int price;
+    do{
+        cout << "Nhap don gia moi:";
+        cin >> price;
+    } while (price<0);
+    Node<Product> *p=P.getHead();
+    Product node_cur;
+    while (p!=NULL)
+    {
+        node_cur=p->getNode();
+        if(node_cur.getID()==s)
+        {
+            node_cur.UpDatePrice(price);
+            break;
+        }
+        p=p->getNext();
+    }
+    P.UpDateNode(s,node_cur);
 }

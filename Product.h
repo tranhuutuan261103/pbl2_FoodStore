@@ -22,11 +22,14 @@ public:
     int getAmount() const;
     float getPrice() const;
     void UpDateAmount(int amount);
+    void UpDatePrice(int price);
     Product ReadNode(ifstream &file);
     void SaveNode(ofstream &file) const;
     friend istream &operator>>(istream &in,LinkedList<Product> &P);
     void printfIntro() const;
     void printfNode() const;
+    void EditAmount(string s,LinkedList<Product> &P);
+    void EditPrice(string s,LinkedList<Product> &P);
 };
 
 #endif // Product_h

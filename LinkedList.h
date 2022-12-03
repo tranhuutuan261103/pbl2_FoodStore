@@ -11,11 +11,11 @@ class Node{
     Node *next;
 public:
     Node(T data,Node *next):data(data),next(next){};
-    T getNode()
+    T getNode() const
     {
         return data;
     };
-    Node* getNext()
+    Node* getNext() const
     {
         return next;
     }
@@ -33,7 +33,7 @@ class LinkedList{
 public:
     LinkedList(){this->head=NULL;};
     ~LinkedList(){this->head=NULL;};
-    Node<T>* getHead()
+    Node<T>* getHead() const
     {
         return this->head;
     };
