@@ -27,6 +27,7 @@ IDBill(IDBill),IDMember(IDMember),BillDay(D),IDStaff(IDStaff),Point(Point),Disco
     string getID() const;
     float Cash(string s,LinkedList<Detail> &D);
     Bill CreateBill(string MaNV,LinkedList<Bill> &,LinkedList<Product> &P,LinkedList<Detail> &MyP,LinkedList<Member> &M,const Discount &Ds);
+    void DeleteBill(LinkedList<Bill> &B,LinkedList<Detail> &D);
     Bill ReadNode(ifstream &file);
     void SaveNode(ofstream &file) const;
     void printfIntro() const;

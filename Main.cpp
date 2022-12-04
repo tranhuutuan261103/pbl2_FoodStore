@@ -17,6 +17,7 @@ void Menu(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,Link
 void PrintfList(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void CreateNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void EditNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
+void DeleteNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void SaveData(const LinkedList<Product> &P,const LinkedList<Staff> &S,const LinkedList<Member> &M,const LinkedList<Bill> &B,const LinkedList<Detail> &Dtl,const LinkedList<Category> &C,const Discount &D);
 
 int main()
@@ -65,11 +66,10 @@ void Menu(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,Link
             EditNode(P,S,M,B,Dtl,C,D);
             break;
         case 4:
-            system("cls");
-            system("pause");
+            DeleteNode(P,S,M,B,Dtl,C,D);
             break;
         default:
-            cout << "Nhap lai!";
+            cout << "Nhap lai!\n";
             system("pause");
             break;
         }
@@ -173,7 +173,6 @@ void CreateNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &
             B.printfList();
             cout << "\n\n";
             b.CreateBill("NV01",B,P,Dtl,M,D);
-            B.InsertNodeAfter(b);
             system("pause");
             break;
         case 4:
@@ -270,6 +269,56 @@ void GetData(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,L
     C.ReadDataFromFile("Category.txt");
     D.ReadNode("Discount.txt");
 }
+
+void DeleteNode(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D)
+{
+    Bill b;
+    Product p;
+    Category c;
+    int choose;
+    do
+    {
+        system("cls");
+        cout << "1.Xoa 1 san pham\n";
+        cout << "2.Xoa 1 loai san pham\n";
+        cout << "3.Xoa 1 hoa don\n";\
+        cout << "0.Thoat\n";
+        cout << "Chon:";
+        cin >> choose;
+        cin.ignore();
+        switch(choose)
+        {
+        case 0:
+            break;
+        case 1:
+            system("cls");
+            P.printfList();
+            cout << "\n\n";
+            p.DeleteProduct(P,Dtl);
+            system("pause");
+            break;
+        case 2:
+            system("cls");
+            C.printfList();
+            cout << "\n\n";
+            c.DeleteCategory(C,P);
+            system("pause");
+            break;
+        case 3:
+            system("cls");
+            B.printfList();
+            cout << "\n\n";
+            b.DeleteBill(B,Dtl);
+            system("pause");
+            break;
+        default:
+            cout << "Nhap lai!";
+            system("pause");
+            break;
+        }
+    } while (choose);
+}
+
 
 void SaveData(const LinkedList<Product> &P,const LinkedList<Staff> &S,const LinkedList<Member> &M,const LinkedList<Bill> &B,const LinkedList<Detail> &Dtl,const LinkedList<Category> &C,const Discount &D)
 {

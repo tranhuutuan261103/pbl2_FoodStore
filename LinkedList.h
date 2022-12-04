@@ -38,6 +38,7 @@ public:
         return this->head;
     };
     LinkedList InsertNodeAfter(T a);
+    LinkedList DeleteNode(string s);
     LinkedList ReadDataFromFile(string s);
     void SavaDataToFile(string s) const;
     void getNode(T &p);
@@ -62,6 +63,23 @@ LinkedList<T> LinkedList<T>::InsertNodeAfter(T a)
             node = node->next;
         node->next = temp;
     }
+    return *this;
+}
+
+template <class T>
+LinkedList<T> LinkedList<T>::DeleteNode(string s)
+{
+    Node<T> *before=NULL,*after=this->head;
+    while (after!=NULL)
+    {
+        T node_cur=after->data;
+        if(node_cur.getID()==s) break;
+        before=after;
+        after=after->next;
+    }
+    if(before==NULL) this->head = this->head->next;
+    else
+        before->next = after->next;
     return *this;
 }
 

@@ -151,6 +151,25 @@ Bill Bill::CreateBill(string MaNV,LinkedList<Bill> &B,LinkedList<Product> &P,Lin
     return *this;
 }
 
+void Bill::DeleteBill(LinkedList<Bill> &B,LinkedList<Detail> &D)
+{
+    string s;
+    cout << "Nhsp ma hoa don can xoa:";
+    getline(cin,s);
+    if (B.CheckID(s)==false)
+    {
+        cout << "Khong co phan tu de xoa!" << endl;
+    } else
+    {
+        B.DeleteNode(s);
+        while(D.CheckID(s)==true)
+        {
+            D.DeleteNode(s);
+        }
+        cout << "Xoa thanh cong!" << endl;
+    }
+}
+
 void Bill::printfIntro() const
 {
     cout << left << setw(15) << "Ma hoa don" ;

@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 #include "Category.h"
+#include "Product.h"
 
 using namespace std;
 
@@ -55,6 +56,32 @@ istream &operator>>(istream &in,LinkedList<Category> &C)
     Category c(s1,s2);
     C.InsertNodeAfter(c);
     return in;
+}
+
+void Category::DeleteCategory(LinkedList<Category> &C,const LinkedList<Product> &P)
+{
+    string s;
+    cout << "Nhap ma loai san pham can xoa:";
+    getline(cin,s);
+    if (C.CheckID(s)==false)
+    {
+        cout << "Khong co phan tu de xoa!" << endl;
+    } else
+    {
+        Node<Product> *p=P.getHead();
+        while(p!=NULL)
+        {
+            Product detail_cur=p->getNode();
+            if (detail_cur.getIDCategory()==s)
+            {
+                cout << "Khong the xoa!\n";
+                return;
+            }
+            p=p->getNext();
+        }
+        C.DeleteNode(s);
+        cout << "Xoa thanh cong!\n";
+    }
 }
 
 void Category::printfIntro() const

@@ -1,5 +1,10 @@
 #include <bits/stdc++.h>
 #include "Product.h"
+#include "Staff.h"
+#include "Member.h"
+#include "Detail.h"
+#include "Day.h"
+#include "Discount.h"
 
 using namespace std;
 
@@ -24,6 +29,11 @@ Product::Product(const Product &p)
 string Product::getID()const
 {
     return this->IDProduct;
+}
+
+string Product::getIDCategory() const
+{
+    return this->IDCategory;
 }
 
 int Product::getAmount() const
@@ -96,6 +106,32 @@ istream &operator>>(istream &in,LinkedList<Product> &P)
     Product p(s1,s2,s3,sl,dongia);
     P.InsertNodeAfter(p);
     return in;
+}
+
+void Product::DeleteProduct(LinkedList<Product> &P,const LinkedList<Detail> &D)
+{
+    string s;
+    cout << "Nhap ma san pham can xoa:";
+    getline(cin,s);
+    if (P.CheckID(s)==false)
+    {
+        cout << "Khong co phan tu de xoa!" << endl;
+    } else
+    {
+        Node<Detail> *p=D.getHead();
+        while(p!=NULL)
+        {
+            Detail detail_cur=p->getNode();
+            if (detail_cur.getIDProduct()==s)
+            {
+                cout << "Khong the xoa!\n";
+                return;
+            }
+            p=p->getNext();
+        }
+        P.DeleteNode(s);
+        cout << "Xoa thanh cong!\n";
+    }
 }
 
 void Product::printfIntro() const
