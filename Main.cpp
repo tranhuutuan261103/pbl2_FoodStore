@@ -9,6 +9,10 @@
 #include "Discount.h"
 #include "Bill.h"
 #include "Category.h"
+// Xem tat ca san pham theo loai
+// Xem chi tiet hoa don
+// Xem chi tiet lap hoa don cua 1 thanh vien
+// Xem chi tiet hoa don do nhan vien 1 lap
 
 using namespace std;
 
