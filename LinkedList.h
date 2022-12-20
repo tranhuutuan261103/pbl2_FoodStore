@@ -167,24 +167,6 @@ bool LinkedList<T>::CheckID(string s) const
     }
     return false;
 }
-/*
-template <class T>
-float LinkedList<T>::Cash(string s)
-{
-    float t=0;
-    Node<T> *p=this->head;
-    T node_cur;
-    while (p!=NULL)
-    {
-        node_cur=p->getNode();
-        if(node_cur.getID()==s)
-        {
-            t+=(node_cur.getAmount()*node_cur.getPrice());
-        }
-        p=p->next;
-    }
-    return t;
-}*/
 
 template <class T>
 LinkedList<T> LinkedList<T>::UpDateNode(string s,T temp)

@@ -36,6 +36,11 @@ string Product::getIDCategory() const
     return this->IDCategory;
 }
 
+string Product::getNameProduct() const
+{
+    return this->NameProduct;
+}
+
 int Product::getAmount() const
 {
     return this->amount;
@@ -122,7 +127,7 @@ void Product::DeleteProduct(LinkedList<Product> &P,const LinkedList<Detail> &D)
         while(p!=NULL)
         {
             Detail detail_cur=p->getNode();
-            if (detail_cur.getIDProduct()==s)
+            if (detail_cur.getID()==s)
             {
                 cout << "Khong the xoa!\n";
                 return;
@@ -198,3 +203,4 @@ void Product::EditPrice(string s,LinkedList<Product> &P)
     }
     P.UpDateNode(s,node_cur);
 }
+

@@ -22,6 +22,7 @@ public:
     void DeleteCategory(LinkedList<Category> &C,const LinkedList<Product> &P);
     void printfIntro() const;
     void printfNode() const;
+    void printfProductCategory(LinkedList<Product> P,LinkedList<Category> C);
 };
 
 #endif // Category_h

@@ -25,6 +25,7 @@ public:
     ~Product(){};
     string getID() const;
     string getIDCategory() const;
+    string getNameProduct() const;
     int getAmount() const;
     float getPrice() const;
     void UpDateAmount(int amount);

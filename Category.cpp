@@ -97,3 +97,26 @@ void Category::printfNode() const
     cout << left << setw(30) << this->NameCategory;
     cout << endl;
 }
+
+void Category::printfProductCategory(LinkedList<Product> P,LinkedList<Category> C)
+{
+    Node<Category> *c=C.getHead();
+    Category node_cur;
+    while (c!=NULL)
+    {
+        node_cur=c->getNode();
+        cout << node_cur.NameCategory << endl;
+        Node<Product> *p=P.getHead();
+        while (p!=NULL)
+        {
+            Product product_cur=p->getNode();
+            if(node_cur.getID()==product_cur.getIDCategory())
+            {
+                product_cur.printfNode();
+            }
+            p=p->getNext();
+        }
+        c=c->getNext();
+        cout << endl << endl;
+    }
+}
