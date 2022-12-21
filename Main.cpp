@@ -33,7 +33,7 @@ void Intro_start()
     setspace(24 + 30);
     cout << "*---*" << endl ;
     setspace(11 + 30);
-    cout << "PBL1: Do an lap trinh tinh toan" << endl;
+    cout << "PBL2: Du an co so lap trinh" << endl;
     setspace(9 + 30);
     cout << "De tai:Quan ly cua hang thuc an nhanh\n\n\n" ;
     setspace(30);
