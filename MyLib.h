@@ -1,4 +1,6 @@
-#pragma once // tránh đụng độ thư viện khi gọi chồng file lên nhau
+#ifndef MyLib_h
+#define MyLib_h
+
 #include <stdio.h>
 #include <conio.h>
 #include<ctime> /* thư viện hỗ trợ về thời gian thực */
@@ -91,3 +93,6 @@ int inputKey()
 
 	return KEY_NONE;
 }
+
+
+#endif // MyLib_h // tránh đụng độ thư viện khi gọi chồng file lên nhau
