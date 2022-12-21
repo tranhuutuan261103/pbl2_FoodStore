@@ -14,6 +14,46 @@
 
 using namespace std;
 
+void setspace(int n)
+{
+    while (n--)
+        cout << " " ;
+}
+
+void Intro_start()
+{
+    setspace(30 - 5);
+    for (int i = 0; i < 60; i++)
+        cout << char(196);
+    cout << endl;
+    setspace(5 + 30);
+    cout << "Truong Dai hoc Bach Khoa - Dai hoc Da Nang" << endl;
+    setspace(14 + 30);
+    cout << "Khoa Cong nghe thong tin" << endl;
+    setspace(24 + 30);
+    cout << "*---*" << endl ;
+    setspace(11 + 30);
+    cout << "PBL1: Do an lap trinh tinh toan" << endl;
+    setspace(9 + 30);
+    cout << "De tai:Quan ly cua hang thuc an nhanh\n\n\n" ;
+    setspace(30);
+    cout << "Sinh vien thuc hien:" ;
+    setspace(10);
+    cout << "Giang vien huong dan:\n" ;
+    setspace(30);
+    cout << "-Nguyen Xuan Thinh" ;
+    setspace(12);
+    cout << "-Le Thi My Hanh\n" ;
+    setspace(30);
+    cout << "-Tran Huu Tuan\n" ;
+    setspace(30 - 5);
+    for (int i = 0; i < 60; i++)
+        cout << char(196);
+    cout << "\n\nNhan enter de tiep tuc..." ;
+    getchar();
+    system("cls");
+}
+
 void GetData(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void Menu(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
 void QuanLyCuaHang(LinkedList<Product> &P,LinkedList<Staff> &S,LinkedList<Member> &M,LinkedList<Bill> &B,LinkedList<Detail> &Dtl,LinkedList<Category> &C,Discount &D);
@@ -27,6 +67,7 @@ void SaveData(const LinkedList<Product> &P,const LinkedList<Staff> &S,const Link
 
 int main()
 {
+    Intro_start();
     LinkedList<Product> P;
     LinkedList<Staff> S;
     LinkedList<Member> M;
