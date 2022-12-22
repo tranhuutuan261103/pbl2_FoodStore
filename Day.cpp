@@ -71,7 +71,7 @@ bool Day::checkDay()
 
 void Day::printfDay() const
 {
-    cout << left << setw(2) << day << "/" << left << setw(2) << month << "/" << left << setw(8) << year;
+    cout << right << setw(2) << day << "/" << right << setw(2) << month << "/" << left << setw(8) << year;
 }
 
 Day::~Day()
