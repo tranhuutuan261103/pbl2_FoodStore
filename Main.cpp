@@ -52,7 +52,6 @@ void Intro_start()
     for (int i = 0; i < 60; i++)
         cout << char(196);
     SetColor(7);
-    cout << "\n\nNhan enter de tiep tuc..." ;
     getchar();
     system("cls");
 }
