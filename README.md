@@ -1,3 +1,5 @@
 Run project in vscode:
-  g++ -g *.cpp -o output.exe
-  ./output.exe
+
+g++ -g *.cpp -o output.exe
+
+./output.exe
